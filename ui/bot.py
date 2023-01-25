@@ -60,7 +60,7 @@ def iris_knear(X_train, X_test, y_train, y_test):
     return acc, cnf
 
 # Указываем токен
-bot = telebot.TeleBot('1937629580:AAGisRGqMOzSkHcqBzU_XI2Eh0XmKz9t-uc')
+bot = telebot.TeleBot('')
 
 
 # Метод, который получает сообщения и обрабатывает их
