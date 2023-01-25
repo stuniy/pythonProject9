@@ -1,16 +1,36 @@
-# This is a sample Python script.
+from fastapi import FastAPI
+from pydantic import BaseModel
+import uvicorn
+import pickle
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+# загрузка модели
+model=pickle.load(open("model\predictor_model1.pkl",'rb'))
 
+app=FastAPI()
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+class Input(BaseModel):
+    bilirubin:float
+    Neutrophils:int
+    Amylase:float
+    Duration:int
+    Lymphocytes:int
 
+@app.get("/")
+def read_root():
+    return {"msg":"Predictor"}
+
+@app.post("/predict")
+def predict_price(input:Input):
+    data = input.dict()
+    data_in = [[data['bilirubin'], data['Neutrophils'], data['Amylase'], data['Duration'],data['Lymphocytes']]]
+
+    prediction = model.predict(data_in)
+    return {
+        'prediction': prediction[0]
+        }
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    uvicorn.run(app, host="127.0.0.1", port=8000)
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
